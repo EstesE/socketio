@@ -8,15 +8,14 @@ app.get('/', function(req, res){
 });
 
 io.use(function(socket, next) {
-	// console.log('Query: ', socket.handshake.query);
 	if(socket.handshake.query.user) {
 		console.log('user: ', JSON.parse(socket.handshake.query.user));
 	}
 
 	return next();
 	// if (socket.handshake.query.foo == "bar") {
- //    	return next();
- //    }
+ 	// 		return next();
+ 	// }
 
 	// next(new Error('Authentication error'));
 });
