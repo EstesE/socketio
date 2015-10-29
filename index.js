@@ -23,11 +23,11 @@ io.use(function(socket, next) {
 
 
 for(var i = 0;  i < c.codes.length; i++) {
-	io.of(c.codes[i].code).on('connection', handleConnection(io.of(c.codes[i].code)));
+	io.of(c.codes[i].code).on('connection', connection(io.of(c.codes[i].code)));
 }
 
 
-function handleConnection(ns) {
+function connection(ns) {
 	return function(socket) {
 		socket.broadcast.emit('alert', socket.id + ' has connected to ' + ns.name);
 		socket.on('disconnect', disconnectCallback(socket, ns));
@@ -43,7 +43,7 @@ function disconnectCallback(socket, ns) {
 
 function messageCallback(socket, ns) {
 	return function(msg) {
-		// Save to mongo
+		// Save to MongoDB
 		// Send to Plivo
 		//Update other in this namespace
 		this.broadcast.emit('chat message', msg);
