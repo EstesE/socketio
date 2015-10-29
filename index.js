@@ -29,7 +29,7 @@ for(var i = 0;  i < c.codes.length; i++) {
 
 function connection(ns) {
 	return function(socket) {
-		socket.broadcast.emit('alert', socket.id + ' has connected to ' + ns.name);
+		socket.broadcast.emit('info', socket.id + ' has connected to ' + ns.name + ' from ' + socket.handshake.address);
 		socket.on('disconnect', disconnectCallback(socket, ns));
 		socket.on('chat message', messageCallback(socket, ns));
 	}
@@ -37,13 +37,13 @@ function connection(ns) {
 
 function disconnectCallback(socket, ns) {
 	return function(msg) {
-		this.broadcast.emit('alert', this.id + ' has disconnected from ' + ns.name);
+		this.broadcast.emit('info', this.id + ' has disconnected from ' + ns.name);
 	}
 }
 
 function messageCallback(socket, ns) {
 	return function(msg) {
-		// Save to MongoDB
+		// Save to MongoDB with timestamp/message/address of sender
 		// Send to Plivo
 		//Update other in this namespace
 		this.broadcast.emit('chat message', msg);
