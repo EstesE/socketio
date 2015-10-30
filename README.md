@@ -4,6 +4,8 @@ Testing socketio.
 npm install
 ## Usage
 node index.js
+## Debugging
+node-debug index.js
 ## Connecting clients
 Use index.html for now. Ember project to follow shortly.
 ## Contributing
