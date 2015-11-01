@@ -45,7 +45,7 @@ function disconnectCallback(socket, ns) {
 
 function messageCallback(socket, ns) {
 	return function(msg) {
-		// This will be changing. I'll be using a sms api.		
+		// This will be changing. I'll be using a the messaging-web-api.		
 		// Save to MongoDB with timestamp/message/address of sender
 		// Send to Plivo
 
