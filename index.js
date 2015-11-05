@@ -22,10 +22,13 @@ io.use(function(socket, next) {
 	return next();
 });
 
-
+// Start multiple namespaces
 for(var i = 0;  i < c.codes.length; i++) {
-	io.of(c.codes[i].code).on('connection', connection(io.of('/')));
+	io.of(c.codes[i].code).on('connection', connection(io.of('/' + c.codes[i].code)));
 }
+
+// Start single namespace
+// io.of(2222).on('connection', connection(io.of('/2222')));
 
 
 function connection(ns) {
@@ -40,7 +43,10 @@ function connection(ns) {
 		Clients.push(socket.id);
 		
 		// Broadcast to all users in namespace that someone connected
-		//socket.broadcast.emit('info', socket.id + ' has connected to ' + ns.name + ' from ' + socket.handshake.address);
+		socket.broadcast.emit('info', socket.id + ' has connected to ' + ns.name + ' from ' + socket.handshake.address);
+
+		// Send message to connecting client
+		console.log('send to specific client');
 
 		// Handle Disconnects
 		socket.on('disconnect', disconnectCallback(socket, ns));
@@ -50,6 +56,8 @@ function connection(ns) {
 		setInterval(function() {
 		    socket.emit('heartbeat', 'someData');
 		}, 10000);
+
+		socket.broadcast.emit(socket.id, 'connected');
 	}
 }
 
