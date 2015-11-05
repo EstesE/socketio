@@ -53,11 +53,10 @@ function connection(ns) {
 
 		socket.on('chat message', messageCallback(socket, ns));
 		socket.on('from_property', fromPropertyCallback(socket, ns));
-		setInterval(function() {
-		    socket.emit('heartbeat', 'someData');
-		}, 10000);
+		// setInterval(function() {
+		//     socket.emit('heartbeat', 'someData');
+		// }, 10000);
 
-		socket.broadcast.emit(socket.id, 'connected');
 	}
 }
 
