@@ -5,9 +5,9 @@ var io = require('socket.io')(http, { serveClient: true });
 var Clients = [];
 var c = require('./codes');
 
-// app.get('/', function(req, res){
-// 	res.sendFile(__dirname + '/index.html');
-// });
+app.get('/', function(req, res){
+	res.sendFile(__dirname + '/index.html');
+});
 
 /*
    Registers a middleware, which is a function that gets executed for
@@ -24,16 +24,25 @@ io.use(function(socket, next) {
 
 
 for(var i = 0;  i < c.codes.length; i++) {
-	io.of(c.codes[i].code).on('connection', connection(io.of(c.codes[i].code)));
+	io.of(c.codes[i].code).on('connection', connection(io.of('/')));
 }
 
 
 function connection(ns) {
 	return function(socket) {
+		if(socket.handshake.query.user) {
+			console.log(JSON.parse(socket.handshake.query.user).userName.toLowerCase() + '(' + socket.id + ') has connected to ' + ns.name + ' from ' + socket.handshake.address);	
+		} else {
+			console.log(socket.id + ' has connected to ' + ns.name + ' from ' + socket.handshake.address);
+		}
+		
 		socket.broadcast.emit('info', socket.id + ' has connected to ' + ns.name + ' from ' + socket.handshake.address);
 		socket.on('disconnect', disconnectCallback(socket, ns));
 		socket.on('chat message', messageCallback(socket, ns));
 		socket.on('from_property', fromPropertyCallback(socket, ns));
+		setInterval(function() {
+		    socket.emit('heartbeat', 'someData');
+		}, 10000);
 	}
 }
 
@@ -45,6 +54,8 @@ function disconnectCallback(socket, ns) {
 
 function messageCallback(socket, ns) {
 	return function(msg) {
+		console.log('MSG: ', msg);
+		console.log(ns.name);
 		// Save to MongoDB with timestamp/message/address of sender
 		// Send to Plivo
 
