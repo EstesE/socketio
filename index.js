@@ -35,9 +35,16 @@ function connection(ns) {
 		} else {
 			console.log(socket.id + ' has connected to ' + ns.name + ' from ' + socket.handshake.address);
 		}
+
+		// Add connected clients to our Clients array
+		Clients.push(socket.id);
 		
-		socket.broadcast.emit('info', socket.id + ' has connected to ' + ns.name + ' from ' + socket.handshake.address);
+		// Broadcast to all users in namespace that someone connected
+		//socket.broadcast.emit('info', socket.id + ' has connected to ' + ns.name + ' from ' + socket.handshake.address);
+
+		// Handle Disconnects
 		socket.on('disconnect', disconnectCallback(socket, ns));
+
 		socket.on('chat message', messageCallback(socket, ns));
 		socket.on('from_property', fromPropertyCallback(socket, ns));
 		setInterval(function() {
