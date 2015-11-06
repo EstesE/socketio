@@ -5,6 +5,12 @@ var io = require('socket.io')(http, { serveClient: true });
 var Clients = [];
 var c = require('./codes');
 
+// app.use(function(req, res, next) {
+// 	res.header("Access-Control-Allow-Origin", "*");
+// 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+// 	next();
+// });
+
 app.get('/', function(req, res){
 	res.sendFile(__dirname + '/index.html');
 });
@@ -17,6 +23,7 @@ app.get('/', function(req, res){
 */
 io.use(function(socket, next) {
 	if(socket.handshake.query.user) {
+		// Authentication piece???
 		// console.log('user: ', JSON.parse(socket.handshake.query.user));
 	}
 	return next();
@@ -56,9 +63,9 @@ function connection(ns) {
 
 		socket.on('chat message', messageCallback(socket, ns));
 		socket.on('from_property', fromPropertyCallback(socket, ns));
-
 	}
 }
+
 
 function disconnectCallback(socket, ns) {
 	return function(msg) {
