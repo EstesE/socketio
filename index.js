@@ -52,6 +52,7 @@ function connection(ns) {
 			Clients.push({'id': socket.id, 'name': ''});
 		}
 		console.log('');
+		console.log('============ Connected Clients ============');
 		console.log(Clients);
 		console.log('');
 
@@ -70,6 +71,7 @@ function connection(ns) {
 			console.log('notification');
 			from.participants.map(function(user) {
 				console.log(user);
+
 			});
 			socket.broadcast.emit('notification', msg);
 		});
@@ -90,6 +92,7 @@ function disconnectCallback(socket, ns) {
 		}
 
 		console.log('');
+		console.log('============ Connected Clients ============');
 		console.log(Clients);
 		console.log('');
 	}
