@@ -65,7 +65,7 @@ function connection(ns) {
 		// Handle Disconnects
 		socket.on('disconnect', disconnectCallback(socket, ns));
 
-		// Send a notification message (this should change the notifications of the conversation)
+		// Send a notification message to specific users (this should change the notifications of the conversation)
 		socket.on('notification', function(from, msg) {
 			console.log('notification');
 			from.participants.map(function(user) {
