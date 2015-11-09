@@ -45,21 +45,32 @@ function connection(ns) {
 	return function(socket) {
 		if(socket.handshake.query.user) {
 			// console.log(JSON.parse(socket.handshake.query.user).userName.toLowerCase() + '(' + socket.id + ') has connected to ' + ns.name + ' from ' + socket.handshake.address);	
+			Clients.push({'id': socket.id, 'name': JSON.parse(socket.handshake.query.user).userName.toLowerCase()});
+			// Clients.push(JSON.parse(socket.handshake.query.user).userName);
 		} else {
 			// console.log(socket.id + ' has connected to ' + ns.name + ' from ' + socket.handshake.address);
+			Clients.push({'id': socket.id, 'name': ''});
 		}
+		console.log(Clients);
 
 		// Add connected clients to our Clients array
-		Clients.push(socket.id);
+		// Clients.push(socket.id);
 		
 		// Broadcast to all users in namespace that someone connected
 		// socket.broadcast.emit('info', socket.id + ' has connected to ' + ns.name + ' from ' + socket.handshake.address);
-
-		// Send message to connecting client
-		console.log('send to specific client');
+		socket.broadcast.emit('info', socket.id + ' has connected');
 
 		// Handle Disconnects
 		socket.on('disconnect', disconnectCallback(socket, ns));
+
+		// Send a notification message (this should change the notifications of the conversation)
+		socket.on('notification', function(from, msg) {
+			console.log('notification');
+			from.participants.map(function(user) {
+				console.log(user);
+			});
+			socket.broadcast.emit('notification', msg);
+		});
 
 		socket.on('chat message', messageCallback(socket, ns));
 		socket.on('from_property', fromPropertyCallback(socket, ns));
@@ -69,6 +80,22 @@ function connection(ns) {
 
 function disconnectCallback(socket, ns) {
 	return function(msg) {
+		var self = this;
+		console.log(self.id + ' has disconnected');
+		// Clients.filter(function(obj) {
+		// 	if(obj.id === self.id) {
+		// 		console.log('Clients: ', Clients);
+		// 		Clients.splice(Clients.indexOf(self.id), 1);
+		// 		console.log('Clients: ', Clients);
+		// 	}
+		// });
+		for(var i = 0; i < Clients.length; i++) {
+			if(Clients[i].id === self.id) {
+				Clients.splice(i, 1);
+			}
+		}
+		console.log('Removing...');
+		console.log(Clients);
 		// this.broadcast.emit('info', this.id + ' has disconnected from ' + ns.name);
 	}
 }
