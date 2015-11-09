@@ -83,24 +83,15 @@ function connection(ns) {
 function disconnectCallback(socket, ns) {
 	return function(msg) {
 		var self = this;
-		// console.log(self.id + ' has disconnected');
-		// Clients.filter(function(obj) {
-		// 	if(obj.id === self.id) {
-		// 		console.log('Clients: ', Clients);
-		// 		Clients.splice(Clients.indexOf(self.id), 1);
-		// 		console.log('Clients: ', Clients);
-		// 	}
-		// });
 		for(var i = 0; i < Clients.length; i++) {
 			if(Clients[i].id === self.id) {
 				Clients.splice(i, 1);
 			}
 		}
-		// console.log('Removing...');
+
 		console.log('');
 		console.log(Clients);
 		console.log('');
-		// this.broadcast.emit('info', this.id + ' has disconnected from ' + ns.name);
 	}
 }
 
