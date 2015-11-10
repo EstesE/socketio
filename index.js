@@ -66,14 +66,20 @@ function connection(ns) {
 		// Handle Disconnects
 		socket.on('disconnect', disconnectCallback(socket, ns));
 
-		// Send a notification message to specific users (this should change the notifications of the conversation)
-		socket.on('notification', function(from, msg) {
-			console.log('notification');
-			from.participants.map(function(user) {
-				console.log(user);
+		// // Send a notification message to specific users (this should change the notifications of the conversation)
+		// socket.on('notification', function(from, msg) {
+		// 	console.log('notification');
+		// 	// from.participants.map(function(user) {
+		// 	// 	console.log(user);
 
-			});
-			socket.broadcast.emit('notification', msg);
+		// 	// });
+		// 	socket.broadcast.emit('notification', msg);
+		// });
+
+		socket.on('notification', function(data) {
+			// This needs to be tightened up. The 'notification' message only needs to be sent to once client (which should be in data).
+			// io.sockets.socket(socket.id).emit('notification', socket.id, 'TESTING NOTIFICATION');
+			io.sockets.emit("notification",socket.id, data);
 		});
 
 		socket.on('chat message', messageCallback(socket, ns));
