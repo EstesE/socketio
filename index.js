@@ -80,6 +80,7 @@ function connection(ns) {
 			// This needs to be tightened up. The 'notification' message only needs to be sent to once client (which should be in data).
 			// io.sockets.socket(socket.id).emit('notification', socket.id, 'TESTING NOTIFICATION');
 			io.sockets.emit("notification",socket.id, data);
+			// io.sockets.sockets[1].emit('notification', true); // <------ This needs more testing but it appears to go to a single client
 		});
 
 		socket.on('chat message', messageCallback(socket, ns));
