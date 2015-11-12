@@ -77,10 +77,15 @@ function connection(ns) {
 		// });
 
 		socket.on('notification', function(data) {
-			// This needs to be tightened up. The 'notification' message only needs to be sent to once client (which should be in data).
-			// io.sockets.socket(socket.id).emit('notification', socket.id, 'TESTING NOTIFICATION');
-			io.sockets.emit("notification",socket.id, data);
-			// io.sockets.sockets[1].emit('notification', true); // <------ This needs more testing but it appears to go to a single client
+			// This will broadcast the 'notification' to all sockets. This can be handled on the client but then things would become much to chatty.
+			// io.sockets.emit("notification",socket.id, data);
+
+			// This will send to the correct client as long as their socket.id is in the 'to' field of the payload.
+			for (var i = 0; i < io.sockets.sockets.length; i++) {
+				if (io.sockets.sockets[i].id === JSON.parse(data).to) {
+					io.sockets.sockets[i].emit('notification', JSON.parse(data).to, data);
+				}
+			}
 		});
 
 		socket.on('chat message', messageCallback(socket, ns));
