@@ -106,6 +106,7 @@ function disconnectCallback(socket, ns) {
 
 		console.log('');
 		console.log('============ Connected Clients ============');
+		console.log('  ' + new Date());
 		console.log(Clients);
 		console.log('');
 	}
